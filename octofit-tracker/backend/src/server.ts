@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import mongoose from 'mongoose';
+import { connectDatabase, databaseName } from './config/database';
 import {
   ActivityModel,
   LeaderboardModel,
@@ -14,13 +14,11 @@ const codespaceName = process.env.CODESPACE_NAME;
 const apiBaseUrl = codespaceName
   ? `https://${codespaceName}-${port}.app.github.dev`
   : `http://localhost:${port}`;
-const mongoUri = process.env.MONGODB_URI ?? 'mongodb://127.0.0.1:27017/octofit_db';
 
 app.use(express.json());
 
-mongoose
-  .connect(mongoUri, { serverSelectionTimeoutMS: 1000 })
-  .then(() => console.log('Connected to MongoDB octofit_db'))
+connectDatabase()
+  .then(() => console.log(`Connected to MongoDB ${databaseName}`))
   .catch((error: Error) => console.warn(`MongoDB connection unavailable: ${error.message}`));
 
 app.get('/', (_request: Request, response: Response) => {

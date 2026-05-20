@@ -1,14 +1,10 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose_1 = __importDefault(require("mongoose"));
+const database_1 = require("../config/database");
 const models_1 = require("../models");
-const mongoUri = process.env.MONGODB_URI ?? 'mongodb://127.0.0.1:27017/octofit_db';
 async function seedDatabase() {
     console.log('Seed the octofit_db database with test data');
-    await mongoose_1.default.connect(mongoUri);
+    await (0, database_1.connectDatabase)();
     await Promise.all([
         models_1.ActivityModel.deleteMany({}),
         models_1.LeaderboardModel.deleteMany({}),
@@ -121,5 +117,5 @@ seedDatabase()
     process.exitCode = 1;
 })
     .finally(async () => {
-    await mongoose_1.default.connection.close();
+    await (0, database_1.disconnectDatabase)();
 });
