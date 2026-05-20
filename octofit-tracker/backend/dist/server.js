@@ -10,7 +10,7 @@ const app = (0, express_1.default)();
 const port = 8000;
 const codespaceName = process.env.CODESPACE_NAME;
 const apiBaseUrl = codespaceName
-    ? `https://${codespaceName}-${port}.app.github.dev`
+    ? `https://${codespaceName}-8000.app.github.dev`
     : `http://localhost:${port}`;
 app.use(express_1.default.json());
 (0, database_1.connectDatabase)()

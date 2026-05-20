@@ -12,7 +12,7 @@ const app = express();
 const port = 8000;
 const codespaceName = process.env.CODESPACE_NAME;
 const apiBaseUrl = codespaceName
-  ? `https://${codespaceName}-${port}.app.github.dev`
+  ? `https://${codespaceName}-8000.app.github.dev`
   : `http://localhost:${port}`;
 
 app.use(express.json());
@@ -21,7 +21,7 @@ connectDatabase()
   .then(() => console.log(`Connected to MongoDB ${databaseName}`))
   .catch((error: Error) => console.warn(`MongoDB connection unavailable: ${error.message}`));
 
-  
+
 app.get('/', (_request: Request, response: Response) => {
   response.json({
     message: 'Octofit Tracker API is running',
