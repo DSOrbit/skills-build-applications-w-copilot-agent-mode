@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
-import { fetchResource } from '../api.js'
+
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME
+const apiUrl = codespaceName && codespaceName.trim() !== ''
+  ? `https://${codespaceName}-8000.app.github.dev/api/leaderboard/`
+  : 'http://localhost:8000/api/leaderboard/'
 
 export default function Leaderboard() {
   const [entries, setEntries] = useState([])
@@ -7,7 +11,9 @@ export default function Leaderboard() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetchResource('/api/leaderboard/')
+    fetch(apiUrl)
+      .then((r) => { if (!r.ok) throw new Error(`API error ${r.status}`); return r.json() })
+      .then((json) => Array.isArray(json) ? json : (json.data ?? []))
       .then(setEntries)
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false))

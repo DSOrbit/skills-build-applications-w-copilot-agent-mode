@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react'
-import { fetchResource } from '../api.js'
+
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME
+const apiUrl = codespaceName && codespaceName.trim() !== ''
+  ? `https://${codespaceName}-8000.app.github.dev/api/users/`
+  : 'http://localhost:8000/api/users/'
 
 export default function Users() {
   const [users, setUsers] = useState([])
@@ -7,7 +11,9 @@ export default function Users() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetchResource('/api/users/')
+    fetch(apiUrl)
+      .then((r) => { if (!r.ok) throw new Error(`API error ${r.status}`); return r.json() })
+      .then((json) => Array.isArray(json) ? json : (json.data ?? []))
       .then(setUsers)
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false))
